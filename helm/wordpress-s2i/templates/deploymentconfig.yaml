@@ -1,0 +1,56 @@
+# apiVersion: apps/v1
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 5
+  selector:
+    app: {{ .Chart.Name }}
+  strategy:
+    type: Rolling
+  triggers: []
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: {{ .Chart.Name }}-config-map-env
+        - secretRef:
+            name: {{ .Chart.Name }}-secret
+        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ .Chart.Name }}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /opt/app-root/src/wp-content/uploads
+          name: {{ .Values.claimName }}
+        - mountPath: /opt/app-root/src/.htaccess
+          name: {{ .Chart.Name }}-config-map-htaccess
+          subPath: .htaccess
+        - mountPath: /opt/app-root/src/wp-config.php
+          name: {{ .Chart.Name }}-config-map-wp-config
+          subPath: wp-config.php
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: {{ .Values.claimName }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.claimName }}
+      - name: {{ .Chart.Name }}-config-map-htaccess
+        configMap:
+          name: {{ .Chart.Name }}-config-map-htaccess
+      - name: {{ .Chart.Name }}-config-map-wp-config
+        configMap:
+          name: {{ .Chart.Name }}-config-map-wp-config
+  triggers:
+    - type: ConfigChange

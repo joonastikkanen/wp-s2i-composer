@@ -1,0 +1,32 @@
+replicaCount: 1
+
+image:
+  name: wordpress-s2i
+  pullPolicy: Always
+  tag: "latest"
+s2iImage:
+  name: "registry.access.redhat.com/ubi8/php-74"
+  tag: "latest"
+claimName: "wp-uploads"
+dbUser: "wp"
+dbPassword: "password123"
+dbHost: "mysql"
+dbDatabase: "wordpress"
+storageClassName: ""
+storageSize: "8Gi"
+domnain: wordress-s2i.example.com
+
+git:
+  uri: "https://github.com/joonastikkanen/wp-s2i-composer.git"
+  branch: "main"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+mysql:
+  auth:
+    rootPassword: "mummo123"
+    database: wordpress
+    username: "wp"
+    password: "password123"

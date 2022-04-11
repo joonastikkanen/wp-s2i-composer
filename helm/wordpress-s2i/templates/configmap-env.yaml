@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-config-map-env
+data:
+  WORDPRESS_DB_USER: {{ .Values.dbUser }}
+  WORDPRESS_DB_NAME: {{ .Values.dbDatabase }}
+  WORDPRESS_DB_HOST: {{ .Values.dbHost }}
+  WORDPRESS_TABLE_PREFIX: {{ .Values.tablePrefix }}
+  WORDPRESS_CONFIG_EXTRA: define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );
+  PATH: /opt/app-root/src/bin:/opt/app-root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/app-root/src/vendor/bin

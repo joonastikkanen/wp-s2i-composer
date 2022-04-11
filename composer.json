@@ -1,0 +1,56 @@
+{
+  "name": "joonastikkanen/wp-s2i-composer",
+  "type": "project",
+  "license": "MIT",
+  "description": "Wordpress S2I example",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": ["wpackagist-plugin/*", "wpackagist-theme/*"]
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "johnpbloch/wordpress-core-installer": "^2.0",
+    "johnpbloch/wordpress-core": "^5.9.3",
+    "wp-cli/wp-cli-bundle": "^2.5.0",
+    "wpackagist-plugin/akismet":"^4.1",
+    "wpackagist-plugin/bbpress":">=2.5.12",
+    "wpackagist-theme/twentytwentytwo":"*",
+    "inpsyde/wp-translation-downloader": "^2.0"
+  },
+  "require-dev": {},
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "composer/installers": true,
+      "inpsyde/wp-translation-downloader": true,
+      "johnpbloch/wordpress-core-installer": true
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "extra": {
+    "wordpress-install-dir": "/opt/app-root/src",
+    "installer-paths": {
+      "wp-content/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
+      "wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
+      "wp-content/themes/{$name}/": ["type:wordpress-theme"]
+    },
+    "wp-translation-downloader": {
+      "languages": [
+        "fi",
+        "sv_SE"
+      ],
+      "directory": "wp-content/languages"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [],
+    "test": [
+      "phpcs"
+    ]
+  }
+}
